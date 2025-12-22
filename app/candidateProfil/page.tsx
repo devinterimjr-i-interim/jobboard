@@ -612,10 +612,16 @@ window.location.href = "/auth";
                         <TableCell>{getBadge(app)}</TableCell>
                         <TableCell className="text-gray-500">{formatDate(app.created_at)}</TableCell>
                         <TableCell>
-                          <Button variant="ghost" size="sm" onClick={() => openCv(app?.cv_url)}>
-                            <ExternalLink className="w-4 h-4 mr-1" />
-                            CV
-                          </Button>
+                       <Button
+  variant="ghost"
+  size="sm"
+  onClick={() => app.cv_url && openCv(app.cv_url)}
+  disabled={!app.cv_url} // optionnel : désactive le bouton si aucun CV
+>
+  <ExternalLink className="w-4 h-4 mr-1" />
+  CV
+</Button>
+
                         </TableCell>
                       </TableRow>
                     ))}
