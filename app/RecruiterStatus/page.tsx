@@ -54,9 +54,10 @@ interface Application {
   email: string;
   cv_url: string;
   created_at: string;
-  jobs?: { title: string } | null;
-  message?: string | null; // ← message de motivation
+  jobs?: { title: string }[] | null; // <-- tableau
+  message?: string | null;
 }
+
 
 interface JobWithApplications {
   id: string;
@@ -147,7 +148,12 @@ export default function RecruiterStatus() {
       })) || [];
 
       setStats({ totalJobs: jobs?.length || 0, totalApplications: applications?.length || 0 });
-      setRecentApplications(applications?.slice(0, 5) || []);
+ const recentApps = applications?.map(app => ({
+  ...app,
+  jobs: app.jobs?.[0] || null, // ne garde que le premier job
+})) || [];
+
+setRecentApplications(recentApps.slice(0, 5))
       setAllJobs(jobsWithApps);
     } catch (error: any) {
       Sentry.captureException(error);
