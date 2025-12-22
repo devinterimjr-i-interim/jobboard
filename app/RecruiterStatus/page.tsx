@@ -125,42 +125,45 @@ export default function RecruiterStatus() {
       setLoading(false);
     }
   };
+const fetchDashboardData = async (recruiterId: string) => {
+  try {
+    const { data: jobs, error: jobsError } = await supabase
+      .from("jobs")
+      .select("id, title, created_at, is_valid")
+      .eq("recruiter_id", recruiterId);
+    if (jobsError) throw jobsError;
 
-  const fetchDashboardData = async (recruiterId: string) => {
-    try {
-      const { data: jobs, error: jobsError } = await supabase
-        .from("jobs")
-        .select("id, title, created_at,is_valid")
-        .eq("recruiter_id", recruiterId);
-      if (jobsError) throw jobsError;
+    const jobIds = jobs?.map((j) => j.id) || [];
+    const { data: applications, error: appsError } = await supabase
+      .from("applications")
+      .select(`id, full_name, email, cv_url, created_at, job_id, jobs(title)`)
+      .in("job_id", jobIds)
+      .order("created_at", { ascending: false });
+    if (appsError) throw appsError;
 
-      const jobIds = jobs?.map((j) => j.id) || [];
-      const { data: applications, error: appsError } = await supabase
-        .from("applications")
-        .select(`id, full_name, email, cv_url, created_at, job_id, jobs(title)`)
-        .in("job_id", jobIds)
-        .order("created_at", { ascending: false });
-      if (appsError) throw appsError;
+    const jobsWithApps: JobWithApplications[] = jobs?.map((job) => ({
+      id: job.id,
+      title: job.title,
+      created_at: job.created_at,
+      application_count: applications?.filter((app) => app.job_id === job.id).length || 0,
+      is_active: job.is_valid, // <-- ajouté pour correspondre au type JobWithApplications
+    })) || [];
 
-      const jobsWithApps = jobs?.map((job) => ({
-        ...job,
-        application_count: applications?.filter((app) => app.job_id === job.id).length || 0,
-      })) || [];
+    setStats({ totalJobs: jobs?.length || 0, totalApplications: applications?.length || 0 });
 
-      setStats({ totalJobs: jobs?.length || 0, totalApplications: applications?.length || 0 });
- const recentApps = applications?.map(app => ({
-  ...app,
- jobs: app.jobs ? [app.jobs[0]] : null, // garde le premier job dans un tableau
+    const recentApps: Application[] = applications?.map(app => ({
+      ...app,
+      jobs: app.jobs ? [app.jobs[0]] : null, // garde le premier job dans un tableau
+    })) || [];
 
-})) || [];
+    setRecentApplications(recentApps.slice(0, 5));
+    setAllJobs(jobsWithApps);
+  } catch (error: any) {
+    Sentry.captureException(error);
+    toast({ title: "Erreur", description: "Impossible de récupérer les données du tableau de bord", variant: "destructive" });
+  }
+};
 
-setRecentApplications(recentApps.slice(0, 5))
-      setAllJobs(jobsWithApps);
-    } catch (error: any) {
-      Sentry.captureException(error);
-      toast({ title: "Erreur", description: "Impossible de récupérer les données du tableau de bord", variant: "destructive" });
-    }
-  };
 
   const handleViewApplications = async (jobId: string) => {
     try {
