@@ -15,6 +15,12 @@ import { Footer } from "@/components/Footer";
 import Link from "next/link";
 
 export default function RecruiterAccess() {
+  interface Profile {
+  id: string;
+  full_name: string;
+  email?: string;
+  // ajoute les autres champs si nécessaire
+}
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
@@ -22,7 +28,7 @@ export default function RecruiterAccess() {
   const [recruiter, setRecruiter] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [profile,setProfile] =useState([])
+  const [profile, setProfile] = useState<Profile[]>([])
 async function fetchProfile(){
   if (!user?.id) return;
   const {data} = await supabase.from("profiles").select().eq('id',user?.id);
