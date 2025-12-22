@@ -27,17 +27,20 @@ const FormVideo = () => {
   const [message, setMessage] = useState("");
   const [job, setJob] = useState<any>(null);
 
-  // Limite de caractères pour le message
   const MAX_MESSAGE_LENGTH = 1000;
 
-  // Charger user
+  // Vérification et redirection si non connecté
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data?.user) setUser(data.user);
+      if (data?.user) {
+        setUser(data.user);
+      } else {
+        router.push("/auth"); // Redirection vers la page de login
+      }
     });
-  }, []);
+  }, [router]);
 
-  // Charger job
+  // Charger le job
   useEffect(() => {
     if (!videoId) return;
     supabase
@@ -68,7 +71,7 @@ const FormVideo = () => {
       });
   }, [user, videoId]);
 
-  // Soumission
+  // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !job) return;
@@ -96,7 +99,6 @@ const FormVideo = () => {
         return;
       }
 
-      // Upload CV via API
       const { data: datasession } = await supabase.auth.getSession();
       const token = datasession.session?.access_token;
       if (!token) throw new Error("Utilisateur non authentifié");
@@ -115,7 +117,6 @@ const FormVideo = () => {
 
       const cvPath = uploadResult.path;
 
-      // Récupérer profil
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("full_name,email")
@@ -123,7 +124,6 @@ const FormVideo = () => {
         .single();
       if (profileError) throw profileError;
 
-      // INSERT candidature
       const { error: insertError } = await supabase.from("applicationvideo").insert([{
         videojob_id: videoId,
         users_id: user.id,
@@ -145,6 +145,7 @@ const FormVideo = () => {
     }
   };
 
+  // Affichage
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -152,11 +153,11 @@ const FormVideo = () => {
       <main className="flex-1 py-12 bg-gray-50">
         <div className="container mx-auto px-4 max-w-4xl space-y-6">
 
-          {/* Déjà postulé */}
+          {/* Vérification en cours */}
           {checkingApplication ? (
             <Card className="border border-gray-200">
-              <CardContent className="py-8">
-                <p className="text-center text-muted-foreground">Vérification en cours...</p>
+              <CardContent className="py-8 text-center text-gray-500">
+                Vérification en cours...
               </CardContent>
             </Card>
           ) : hasApplied ? (
@@ -186,7 +187,6 @@ const FormVideo = () => {
                 <CardTitle className="text-2xl font-bold text-gray-900">{job?.title}</CardTitle>
                 {job && (
                   <div className="mt-2 flex flex-wrap gap-4 text-gray-600 text-sm">
-                    <span className="bg-gray-100 px-2 py-1 rounded">{job.type}</span>
                     <span className="bg-gray-100 px-2 py-1 rounded">{job.location}</span>
                   </div>
                 )}
@@ -201,17 +201,12 @@ const FormVideo = () => {
                       rows={6}
                       value={message}
                       onChange={(e) => {
-                        if (e.target.value.length <= MAX_MESSAGE_LENGTH) {
-                          setMessage(e.target.value);
-                        }
+                        if (e.target.value.length <= MAX_MESSAGE_LENGTH) setMessage(e.target.value);
                       }}
                       placeholder={`Présentez-vous et expliquez votre motivation (max ${MAX_MESSAGE_LENGTH} caractères)...`}
                       className="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 resize-none"
                     />
-                    {/* Compteur de caractères */}
-                    <p className="text-sm text-gray-500 mt-1">
-                      {message.length}/{MAX_MESSAGE_LENGTH} caractères
-                    </p>
+                    <p className="text-sm text-gray-500 mt-1">{message.length}/{MAX_MESSAGE_LENGTH} caractères</p>
                   </div>
 
                   <div>
@@ -227,9 +222,7 @@ const FormVideo = () => {
                       />
                       <Upload className="h-6 w-6 text-gray-500" />
                     </div>
-                    {cvFile && (
-                      <p className="text-sm text-gray-500 mt-1">Fichier sélectionné : {cvFile.name}</p>
-                    )}
+                    {cvFile && <p className="text-sm text-gray-500 mt-1">Fichier sélectionné : {cvFile.name}</p>}
                   </div>
 
                   <Button

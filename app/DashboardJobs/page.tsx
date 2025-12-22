@@ -103,7 +103,9 @@ export default function DashboardJobs() {
     fetchJobs();
   };
 
-  const handleDeleteVideoJob = async (id,title) => {
+
+const handleDeleteVideoJob = async (id: string, title: string) => {
+
   const response = await fetch("/api/delete-video", {
       method: "POST",
       headers: {
