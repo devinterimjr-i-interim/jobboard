@@ -672,12 +672,16 @@ window.location.href = "/auth";
             <Briefcase className="w-5 h-5 text-[#4d307cff]" />
             <h2 className="text-lg sm:text-xl font-semibold">Mon CV</h2>
           </div>
-          {profile?.cv_public && (
-            <Button variant="destructive" size="sm" onClick={() => deleteCurrentCv(profile.cv_public)}>
-              <Trash2 className="w-4 h-4 mr-1" />
-              Supprimer le CV
-            </Button>
-          )}
+   {profile?.cv_public && (
+  <Button
+    variant="destructive"
+    size="sm"
+    onClick={() => deleteCurrentCv(profile.cv_public!)} // le ! dit à TypeScript que ce n'est pas null ici
+  >
+    <Trash2 className="w-4 h-4 mr-1" />
+    Supprimer le CV
+  </Button>
+)}
         </div>
 
         <p className="text-sm text-gray-500 mb-2">
