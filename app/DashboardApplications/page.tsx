@@ -70,7 +70,7 @@ const fetchApplications = async () => {
     setLoading(false);
   }
 };
-async function openCv(idpath) {
+async function openCv(idpath: string) {
   const filePath = idpath; // EXACTEMENT ce qui est stocké en BDD
 
   const { data, error } = await supabase.storage
@@ -84,6 +84,7 @@ async function openCv(idpath) {
 
   window.open(data.signedUrl);
 }
+
 
 // Ouvre la modale de refus
 const handleReject = (id: string) => {
