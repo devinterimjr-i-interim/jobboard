@@ -407,7 +407,9 @@ const deleteProfilRecruiter = async () => {
                   <div key={app.id} className="flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg hover:bg-indigo-50 transition">
                     <div>
                       <p className="font-medium text-gray-800">{app.full_name}</p>
-                      <p className="text-sm text-gray-500">{app.jobs?.title || "Titre indisponible"}</p>
+                 <p className="text-sm text-gray-500">{app.jobs?.[0]?.title || "Titre indisponible"}</p>
+
+                      
                     </div>
                     <p className="text-sm text-gray-400">{new Date(app.created_at).toLocaleDateString("fr-FR")}</p>
                   </div>
