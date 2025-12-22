@@ -30,7 +30,10 @@ interface Job {
     company_name?: string;
   };
 }
-
+interface ApplicationFormProps {
+  jobId: string;
+  jobTitle?: string; // Ajouter cette ligne si tu veux passer le titre
+}
 const JobDetail = () => {
   const { id } = useParams();
   const navigate = useRouter();

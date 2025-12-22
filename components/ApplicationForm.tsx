@@ -15,9 +15,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ApplicationFormProps {
   jobId: string;
+  jobTitle?: string; // ← ajoute cette ligne
 }
 
-export const ApplicationForm = ({ jobId }: ApplicationFormProps) => {
+export const ApplicationForm = ({ jobId, jobTitle }: ApplicationFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useRouter();
