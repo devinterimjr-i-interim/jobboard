@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  --background: 0 0% 100%; /* blanc */
+  --foreground: 215 25% 15%; /* texte sombre */
+  --primary: 215 85% 25%; /* bleu */
+  --primary-foreground: 0 0% 100%; /* texte blanc sur bleu */
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Boutons personnalisés */
+.btn-primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background-color: hsl(var(--primary-foreground)); /* optionnel: couleur au hover */
+  color: hsl(var(--primary));
+}

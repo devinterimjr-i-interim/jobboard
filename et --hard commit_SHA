@@ -1,0 +1,35 @@
+[33ma606844[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Install react-day-picker
+[33ma9ad9b5[m install react avatar
+[33m415bc3d[m Install @radix-ui/react-aspect-ratio
+[33maa62226[m fix:radix lib
+[33m45401d2[m fix:bug header
+[33mc22959f[m  fix:typage page profil
+[33mc3a01c2[m fix:bug typage page candidateProfil
+[33m9c74557[m fix:bug page candidate profil
+[33mbe6da91[m fix:deploiement page candidateProfil
+[33me59678b[m fix:bug deploiement page auth
+[33md55ab7e[m fix:deploiement bug page recruiterStatus
+[33m119d328[m fix:deploiement bug page recruiterSpace
+[33mc8ebf4c[m fix:bug deployement venant du formvideo
+[33m1d70b93[m fix:test redeploiement
+[33m148addc[m fix:deployement 5
+[33m88ddded[m fix:deployement 4
+[33m3e6ae63[m fix:deployement 3
+[33m94370e9[m fix:deployement 2 bug
+[33mba9c37b[m fix:bug deployement vercel
+[33m9d94103[m feat: refonte section page d'acceuil
+[33md9f041d[m feat:integration de sentry pour gestion erreur
+[33m149725a[m chore: réindentation du code
+[33m487bf4e[m fix:header responsive
+[33m3f0bc0b[m feat:verif du responsive complet
+[33m494bbe2[m fix:bug du au offre active
+[33mb2861c7[m fix:bug bouton carrousel et responsive
+[33m2098d1b[m docs: mise à jour de la page RGPD pour préciser la suppression complète des données
+[33m85c8acc[m fix: correction suppression bucket upload
+[33m7fadf5b[m feat:ajout des message d'erreur
+[33m3a98b63[m feat:ajout champs invisble anti bot page inscription
+[33meb7da94[m fix:bug bouton envoie recruteur
+[33mf99969f[m feat: sécurisation des formulaires contre les failles XSS
+[33mb19b9f1[m feat:ajout page rgpd et checkbox de validation
+[33ma5ef455[m first commit
+[33mf038f9b[m Initial commit from Create Next App
