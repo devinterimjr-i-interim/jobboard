@@ -150,7 +150,8 @@ export default function RecruiterStatus() {
       setStats({ totalJobs: jobs?.length || 0, totalApplications: applications?.length || 0 });
  const recentApps = applications?.map(app => ({
   ...app,
-  jobs: app.jobs?.[0] || null, // ne garde que le premier job
+ jobs: app.jobs ? [app.jobs[0]] : null, // garde le premier job dans un tableau
+
 })) || [];
 
 setRecentApplications(recentApps.slice(0, 5))
