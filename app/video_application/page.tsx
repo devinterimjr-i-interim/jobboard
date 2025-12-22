@@ -67,41 +67,48 @@ export default function AdminVideoApplications() {
   }, [user, authLoading, router]);
 
   /* 🔎 Fetch candidatures vidéo */
-  const fetchApplications = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("applicationvideo")
-        .select(`
-          id,
-          full_name,
-          email,
-          status,
-          created_at,
-          cv_url,
-          message,
-          video_job:videojob_id (
-            title,
-            location,
-            contract_type
-          )
-        `)
-        .order("created_at", { ascending: false });
+const fetchApplications = async () => {
+  try {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("applicationvideo")
+      .select(`
+        id,
+        full_name,
+        email,
+        status,
+        created_at,
+        cv_url,
+        message,
+        video_job:videojob_id (
+          title,
+          location,
+          contract_type
+        )
+      `)
+      .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      setApplications(data || []);
-    } catch (error: any) {
-      console.error(error);
-      Sentry.captureException(error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de récupérer les candidatures",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (error) throw error;
+
+    // Transformer video_job de tableau à objet
+    const formattedData = (data || []).map((item: any) => ({
+      ...item,
+      video_job: item.video_job?.[0] || null
+    }));
+
+    setApplications(formattedData);
+  } catch (error: any) {
+    console.error(error);
+    Sentry.captureException(error);
+    toast({
+      title: "Erreur",
+      description: "Impossible de récupérer les candidatures",
+      variant: "destructive",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchApplications();
