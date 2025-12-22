@@ -103,23 +103,22 @@ export default function DashboardJobs() {
     fetchJobs();
   };
 
-
-const handleDeleteVideoJob = async (id: string, title: string) => {
-
+const handleDeleteVideoJob = async (id: number, title: string) => {
   const response = await fetch("/api/delete-video", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ path: title }),
-    });
+  });
 
-    const result = await response.json();
+  await response.json();
 
-    const responseTable = await supabase.from('video_job').delete().eq('id', id)
+  await supabase.from('video_job').delete().eq('id', id);
 
-    setVideoJobs((prev)=> prev.filter((job)=>job.id !==id))
-  };
+  setVideoJobs((prev) => prev.filter((job) => job.id !== id));
+};
+
 
   
   
