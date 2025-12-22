@@ -178,7 +178,12 @@ useEffect(() => {
           .order("created_at", { ascending: false });
 
       if (videoApplicationsError) throw videoApplicationsError;
-      setVideoApplications(videoApplicationsData || []);
+    const transformedVideoApplications = (videoApplicationsData || []).map((app: any) => ({
+  ...app,
+  video_job: app.video_job?.[0] || { title: "", location: "", contract_type: "" },
+}));
+setVideoApplications(transformedVideoApplications);
+
 
     } catch (error) {
       if (process.env.NODE_ENV === "development") console.error("Erreur lors du chargement des données:", error);
