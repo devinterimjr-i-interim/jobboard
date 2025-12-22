@@ -383,7 +383,7 @@ async function deleteCurrentCv(cvPath: string) {
     if (!res.ok) throw new Error(data.error || "Erreur serveur");
 
     alert("CV supprimé avec succès !");
-    setProfile({ ...profile, cv_public: null });
+   setProfile(prev => prev ? { ...prev, cv_public: null } : null);
 
   } catch (error: any) {
     console.error("Erreur suppression CV :", error);
