@@ -46,23 +46,24 @@ const CvTech = () => {
     window.open(data.signedUrl);
   }
 
-  async function fetchProfiles() {
-    const recruiter = await isRecruiter();
-    if (!recruiter) return;
-    try {
-      const { data, error } = await supabase
-        .from<Profile>('profiles')
-        .select('*')
-        .not('cv_public', 'is', null);
-      if (error) {
-        Sentry.captureException(error);
-        return;
-      }
-      setProfiles(data || []);
-    } catch (err) {
-      Sentry.captureException(err);
+async function fetchProfiles() {
+  const recruiter = await isRecruiter();
+  if (!recruiter) return;
+  try {
+    const { data, error } = await supabase
+      .from<'profiles', Profile>('profiles') // <-- deux arguments
+      .select('*')
+      .not('cv_public', 'is', null);
+    if (error) {
+      Sentry.captureException(error);
+      return;
     }
+    setProfiles(data || []);
+  } catch (err) {
+    Sentry.captureException(err);
   }
+}
+
 
   useEffect(() => {
     fetchProfiles();
@@ -122,13 +123,14 @@ const CvTech = () => {
                   </p>
                 </div>
 
-                <button
-                  onClick={() => openCv(profile.cv_public)}
-                  className="mt-4 bg-[#4d307cff] text-white py-2 rounded-lg font-semibold hover:bg-[#3b2560] transition-colors flex items-center justify-center gap-2 border-0"
-                >
-                  <Download className="w-4 h-4" />
-                  Télécharger le CV
-                </button>
+           <button
+  onClick={() => profile.cv_public && openCv(profile.cv_public)}
+  className="mt-4 bg-[#4d307cff] text-white py-2 rounded-lg font-semibold hover:bg-[#3b2560] transition-colors flex items-center justify-center gap-2 border-0"
+>
+  <Download className="w-4 h-4" />
+  Télécharger le CV
+</button>
+
               </div>
             ))
           )}
