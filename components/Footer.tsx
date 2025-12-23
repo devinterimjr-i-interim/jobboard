@@ -15,7 +15,7 @@ export const Footer = () => {
           </div>
 
           {/* Coordonnées */}
-          <div className="flex flex-col sm:flex-row gap-6">
+          {/* <div className="flex flex-col sm:flex-row gap-6">
             <div className="flex items-center gap-2 text-gray-700">
               <Mail className="h-5 w-5 text-primary" />
               <span>ctonjob@gmail.com</span>
@@ -28,7 +28,7 @@ export const Footer = () => {
               <MapPin className="h-5 w-5 text-primary" />
               <span>Paris, France</span>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Liens légaux */}
