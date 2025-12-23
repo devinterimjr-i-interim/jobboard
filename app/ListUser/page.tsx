@@ -111,11 +111,11 @@ const AdminUsers = () => {
   useEffect(() => {
     const init = async () => {
       const isAdmin = await checkAdmin();
-      if (!isAdmin) {
-        alert("Accès refusé — page réservée aux administrateurs.");
-        router.push("/auth"); // redirection si non admin
-        return;
-      }
+  if (!isAdmin) {
+  router.replace("/"); // ✅ retour accueil
+  return;
+}
+
       await fetchUsers(0);
     };
     init();

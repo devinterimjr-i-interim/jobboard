@@ -346,7 +346,7 @@ async function insertCv() {
       alert("CV uploadé mais erreur lors de la mise à jour du profil");
       console.error(updateError);
     } else {
-      alert("CV et poste désiré mis à jour avec succès !");
+    alert("CV et poste désiré mis à jour avec succès !");
       setFile(null);
       setNamecv("");
       const { data: newProfile } = await supabase
@@ -702,13 +702,25 @@ window.location.href = "/auth";
             className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
             onChange={(e) => setFile(e.target.files?.[0] || null)}/>
         </div>
-
+{/* 
         <input
           type="text"
           placeholder="Nom du poste recherché (ex: Développeur Web)"
           value={nameCv}
           onChange={(e) => setNamecv(e.target.value)}
-          className="w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-600 mb-4"/>
+          className="w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-600 mb-4"/> */}
+<select
+  value={nameCv}
+  onChange={(e) => setNamecv(e.target.value)}
+  className="w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-600 mb-4"
+>
+  <option value="">Sélectionnez un secteur</option>
+  {sector.map((s) => (
+    <option key={s.id} value={s.name.trim()}>
+      {s.name.trim()}
+    </option>
+  ))}
+</select>
 
         <button
           className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

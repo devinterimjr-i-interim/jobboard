@@ -12,9 +12,9 @@ export default function PrivacyPage() {
         </h1>
 
         <p className="mb-4 text-sm sm:text-base">
-          La protection de vos données personnelles est une priorité pour <strong>Next’Job</strong>. 
+          La protection de vos données personnelles est une priorité pour <strong>C'tonjob</strong>, projet de la société <strong>I‑Intérim SARL</strong>. 
           Cette politique décrit la manière dont nous collectons, utilisons et protégeons vos données 
-          lors de l’utilisation de notre plateforme.
+          lors de l’utilisation de la plateforme.
         </p>
 
         {/* 1. Données collectées */}
@@ -79,9 +79,9 @@ export default function PrivacyPage() {
         {/* 3. Base légale */}
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">3. Base légale du traitement</h2>
         <ul className="list-disc list-inside mb-4 text-sm sm:text-base space-y-1">
-          <li><strong>Exécution du contrat</strong> (art. 6.1.b) : création de compte, gestion du profil, candidatures, espace recruteur.</li>
-          <li><strong>Consentement</strong> (art. 6.1.a) : partage volontaire du CV via CV Tech.</li>
-          <li><strong>Intérêt légitime</strong> (art. 6.1.f) : prévention de fraude, vérification du SIRET et documents justificatifs, sécurité de la plateforme.</li>
+          <li><strong>Exécution du contrat</strong> : création de compte, gestion du profil, candidatures, espace recruteur.</li>
+          <li><strong>Consentement</strong> : partage volontaire du CV via CV Tech.</li>
+          <li><strong>Intérêt légitime</strong> : prévention de fraude, vérification du SIRET et documents justificatifs, sécurité de la plateforme.</li>
         </ul>
 
         {/* 4. Conservation et suppression */}
@@ -112,34 +112,7 @@ export default function PrivacyPage() {
           <li>Droit de réclamation auprès de la CNIL</li>
         </ul>
         <p className="mb-4 text-sm sm:text-base">
-          Contact pour exercer vos droits : <strong>contact@nextjob.fr</strong>
-        </p>
-
-        {/* 7. CV Tech */}
-        <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">7. Partage volontaire du CV (CV Tech)</h2>
-        <p className="mb-4 text-sm sm:text-base">
-          Les candidats peuvent rendre leur CV visible aux recruteurs via la CV Tech. 
-          Le partage est optionnel et basé sur le consentement.
-        </p>
-        <ul className="list-disc list-inside mb-4 ml-4 text-sm sm:text-base space-y-1">
-          <li>Nom et prénom</li>
-          <li>Titre ou domaine recherché</li>
-          <li>CV (si activé)</li>
-        </ul>
-        <p className="mb-4 text-sm sm:text-base text-red-600">
-          ⚠️ Les candidatures envoyées via offres d’emploi transmettent automatiquement CV, nom et prénom au recruteur, même si le CV n’est pas partagé via CV Tech.
-        </p>
-        <div className="flex items-start gap-2 p-4 mb-4 border border-red-300 bg-red-50 rounded-lg">
-          <AlertTriangle className="w-5 h-5 text-red-600 mt-1" />
-          <p className="text-sm sm:text-base text-red-700">
-            Le partage du CV via CV Tech peut être retiré à tout moment depuis votre profil.
-          </p>
-        </div>
-
-        {/* 8. Cookies */}
-        <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">8. Cookies</h2>
-        <p className="mb-4 text-sm sm:text-base">
-          Aucun cookie publicitaire ou de suivi n’est utilisé. Les cookies tiers éventuels nécessitent votre consentement.
+          Contact pour exercer vos droits : <strong>s.hammami@i-interim.com</strong>
         </p>
 
         <p className="text-xs sm:text-sm mt-6 text-gray-600 text-center sm:text-left">

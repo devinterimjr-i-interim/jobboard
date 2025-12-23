@@ -14,6 +14,7 @@ export default function VideoJobFormPage() {
   const { toast } = useToast();
   const router = useRouter();
 
+  // Form state
   const [title, setTitle] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [location, setLocation] = useState("");
@@ -21,10 +22,18 @@ export default function VideoJobFormPage() {
   const [salary, setSalary] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  /* 🔒 ADMIN ONLY */
+  // Page loading pour éviter le flash
+  const [loadingPage, setLoadingPage] = useState(true);
+
+  // 🔒 Vérification admin
   useEffect(() => {
-    const checkAdmin = async () => {
-      if (!user) return;
+    const checkAccess = async () => {
+      if (authLoading) return;
+
+      if (!user) {
+        router.push("/auth"); // redirection si non connecté
+        return;
+      }
 
       try {
         const { data, error } = await supabase
@@ -39,25 +48,26 @@ export default function VideoJobFormPage() {
             description: "Cette page est réservée aux administrateurs",
             variant: "destructive",
           });
-          router.push("/"); // redirection si non admin
+          router.push("/"); // redirection si pas admin
+          return;
         }
+
+        // Tout est OK : on peut afficher la page
+        setLoadingPage(false);
+
       } catch (err) {
         Sentry.captureException(err);
         router.push("/");
       }
     };
 
-    if (!authLoading) {
-      if (!user) {
-        router.push("/auth"); // non connecté
-      } else {
-        checkAdmin();
-      }
-    }
+    checkAccess();
   }, [user, authLoading, router, toast]);
 
+  // Sécurisation des champs
   const sanitize = (v: string) => v.trim().replace(/[<>]/g, "");
 
+  // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!videoFile) {
@@ -68,9 +78,8 @@ export default function VideoJobFormPage() {
     setSubmitting(true);
 
     try {
-      /* 1️⃣ Upload vidéo */
+      // Upload vidéo
       const filePath = `admin/${Date.now()}-${videoFile.name}`;
-
       const { error: uploadError } = await supabase.storage
         .from("video_job")
         .upload(filePath, videoFile, { upsert: false });
@@ -81,7 +90,7 @@ export default function VideoJobFormPage() {
         .from("video_job")
         .getPublicUrl(filePath);
 
-      /* 2️⃣ Appel API sécurisée */
+      // Appel API
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
 
@@ -106,7 +115,7 @@ export default function VideoJobFormPage() {
       toast({ title: "Offre vidéo publiée avec succès 🎉" });
       router.push("/");
 
-      /* reset */
+      // Reset formulaire
       setTitle("");
       setVideoFile(null);
       setLocation("");
@@ -125,6 +134,15 @@ export default function VideoJobFormPage() {
       setSubmitting(false);
     }
   };
+
+  // Loader si vérification en cours
+  if (loadingPage || authLoading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-500">Chargement...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto mt-20 p-6 bg-white border-gray-500 rounded-xl shadow-sm">
@@ -175,7 +193,8 @@ export default function VideoJobFormPage() {
         <Button
           type="submit"
           disabled={submitting}
-          className="w-full bg-[#4d307cff] border-gray-300 text-[white]">
+          className="w-full bg-[#4d307cff] border-gray-300 text-white"
+        >
           {submitting ? "Publication..." : "Publier"}
         </Button>
       </form>

@@ -53,30 +53,44 @@ const [loadingUser, setLoadingUser] = useState(true);
 
 useEffect(() => {
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
 
-    if (!session) {
-      router.push("/login"); // redirige si pas connecté
-      return;
+      if (!session) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: userData, error } = await supabase
+        .from("profiles") // <- table contenant le rôle
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error || !userData) {
+        router.push("/login");
+        return;
+      }
+
+      if (userData.role !== "admin") {
+        router.push("/");
+        return;
+      }
+
+      setUser(userData);
+    } catch (err) {
+      console.error(err);
+      Sentry.captureException(err);
+      router.push("/auth");
+    } finally {
+      setLoadingUser(false); // 🔑 toujours false
     }
-
-    const { data: userData } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", session.user.id)
-      .single();
-
-    if (!userData || userData.role !== "admin") {
-      router.push("/"); // redirige si pas admin
-      return;
-    }
-
-    setUser(userData);
-    setLoadingUser(false);
   };
 
   checkAuth();
 }, [router]);
+
+
 
 // Fetch des candidatures au montage
 useEffect(() => {
@@ -164,19 +178,16 @@ const confirmReject = async () => {
   }
 };
 
+
 if (loadingUser) {
-  return <p className="text-center mt-20 text-gray-500">Chargement...</p>;
+  return (
+    <div className="w-screen h-screen flex items-center justify-center bg-gray-50">
+      <p className="text-gray-500">Chargement...</p>
+    </div>
+  );
 }
 
-  if (loading) {
-    return (
-      
-      <div className="text-center py-12">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-transparent mx-auto mb-4"></div>
-        <p>Chargement...</p>
-      </div>
-    );
-  }
+
 
   if (applications.length === 0) {
     return (

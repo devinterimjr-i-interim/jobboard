@@ -4,12 +4,12 @@ import Link from 'next/link';
 export default function CGUPage() {
   return (
     <main className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-md border border-gray-200">
-      <h1 className="text-2xl font-bold mb-4">Conditions Générales d'Utilisation (CGU) — Next'Job</h1>
+      <h1 className="text-2xl font-bold mb-4">Conditions Générales d'Utilisation (CGU) — C'tonjob</h1>
       <p className="text-sm text-gray-600 mb-6">Dernière mise à jour : 2025</p>
 
       <h2 className="text-xl font-semibold mt-4 mb-2">1. Objet</h2>
       <p className="mb-4">
-        Les présentes CGU encadrent l'accès et l'utilisation du site Next'Job, plateforme de publication et de consultation d'offres d'emploi.
+        Les présentes CGU encadrent l'accès et l'utilisation du site <strong>C'tonjob</strong>, projet de la société <strong>I‑Intérim SARL</strong>, plateforme de publication et de consultation d'offres d'emploi.
         En utilisant le site, vous acceptez sans réserve ces CGU.
       </p>
 
@@ -32,7 +32,7 @@ export default function CGUPage() {
 
       <h2 className="text-xl font-semibold mt-4 mb-2">4. Refus, suspension et bannissement</h2>
       <p className="mb-2">
-        Next'Job se réserve le droit, sans préavis, de refuser, suspendre temporairement ou bannir définitivement tout compte, offre ou CV dans les cas suivants :
+        <strong>I‑Intérim</strong> se réserve le droit, sans préavis, de refuser, suspendre temporairement ou bannir définitivement tout compte, offre ou CV dans les cas suivants :
       </p>
       <ul className="list-disc list-inside mb-4">
         <li>Absence ou invalidité du justificatif officiel pour les comptes recruteurs.</li>
@@ -49,24 +49,24 @@ export default function CGUPage() {
 
       <h2 className="text-xl font-semibold mt-4 mb-2">5. Responsabilité</h2>
       <p className="mb-4">
-        Next'Job agit uniquement en tant qu’hébergeur. La responsabilité de la plateforme ne peut être engagée pour les contenus publiés par les utilisateurs.
+        <strong>I‑Intérim</strong> agit uniquement en tant qu’hébergeur. La responsabilité de la plateforme ne peut être engagée pour les contenus publiés par les utilisateurs.
         Chaque recruteur garantit la plateforme contre toute réclamation, action judiciaire ou dommage lié à ses publications.
       </p>
 
       <h2 className="text-xl font-semibold mt-4 mb-2">6. Données personnelles et cookies</h2>
       <p className="mb-4">
-        Next'Job collecte et traite les données nécessaires au fonctionnement du service et à la vérification des comptes.
+        Les données sont collectées et traitées par <strong>I‑Intérim</strong> conformément à la réglementation en vigueur (RGPD).
         Aucun cookie de suivi n'est utilisé ; seuls les cookies techniques strictement nécessaires peuvent être présents.
       </p>
 
       <h2 className="text-xl font-semibold mt-4 mb-2">7. Modification des CGU</h2>
       <p className="mb-4">
-        Next'Job peut modifier ces CGU à tout moment. Les modifications importantes seront portées à la connaissance des utilisateurs par notification, email ou bannière.
+        <strong>I‑Intérim</strong> peut modifier ces CGU à tout moment. Les modifications importantes seront portées à la connaissance des utilisateurs par notification, email ou bannière.
       </p>
 
       <h2 className="text-xl font-semibold mt-4 mb-2">8. Contact</h2>
       <p className="mb-4">
-        Pour toute question : <a href="mailto:contact@nextjob.fr" className="underline">contact@nextjob.fr</a>.
+        Pour toute question : <a href="mailto:s.hammami@i-interim.com" className="underline">s.hammami@i-interim.com</a>.
       </p>
 
       <div className="mt-8">

@@ -37,25 +37,18 @@ const Jobs = () => {
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
   // Vérifie si l'utilisateur est connecté
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) throw error;
+useEffect(() => {
+  const checkUser = async () => {
+    const { data } = await supabase.auth.getUser();
 
-        const id = data?.user?.id || null;
-        if (!id) {
-          window.location.href = "/"; // redirection accueil
-        } else {
-          setUserId(id);
-        }
-      } catch (error: any) {
-        console.error("Erreur récupération utilisateur :", error);
-        if (process.env.NODE_ENV === "production") Sentry.captureException(error);
-      }
-    };
-    checkUser();
-  }, []);
+    // connecté → id
+    // pas connecté → null (normal)
+    setUserId(data?.user?.id ?? null);
+  };
+
+  checkUser();
+}, []);
+
 
   // Fetch jobs
   useEffect(() => {

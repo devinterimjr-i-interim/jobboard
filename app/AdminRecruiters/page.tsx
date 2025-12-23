@@ -163,8 +163,10 @@ const AdminRecruiters = () => {
   ================================= */
   useEffect(() => {
     const checkAdmin = async () => {
-      if (!user) return setLoading(false);
-
+   if (!user) {
+  router.replace("/auth"); // 🔥 redirection immédiate
+  return;
+}
       try {
         const { data } = await supabase
           .from("profiles")

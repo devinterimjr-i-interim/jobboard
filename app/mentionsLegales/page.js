@@ -12,11 +12,12 @@ export default function MentionsLegalesPage() {
 
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">1. Éditeur du site</h2>
         <p className="mb-4 text-sm sm:text-base">
-          Nom : <strong>I-Intérim SARL</strong><br />
+          Projet : <strong>C’tonjob</strong><br />
+          Société responsable : <strong>I‑Intérim SARL</strong><br />
           Siège social : 45 Avenue des Entrepreneurs, 75015 Paris, France<br />
-          Email : <strong>contact@i-interim.fr</strong><br />
+          Email : <strong>s.hammami@i-interim.com</strong><br />
           SIRET : 123 456 789 00012<br />
-          Directeur de publication : Marie Dupont
+          Directeur de publication : Samy Hammami
         </p>
 
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">2. Hébergeur du site</h2>
@@ -29,26 +30,27 @@ export default function MentionsLegalesPage() {
 
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">3. Objet du site</h2>
         <p className="mb-4 text-sm sm:text-base">
-          I-Intérim est une plateforme de mise en relation entre candidats et recruteurs pour des offres d’emploi et missions d’intérim.
+          C’tonjob est un projet de I‑Intérim SARL permettant la mise en relation entre candidats et recruteurs pour des offres d’emploi et missions d’intérim.
         </p>
 
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">4. Propriété intellectuelle</h2>
         <p className="mb-4 text-sm sm:text-base">
-          Tous les contenus du site (textes, images, logos, code) sont la propriété exclusive de I-Intérim, sauf mention contraire. Toute reproduction ou utilisation sans autorisation est interdite.
+          Tous les contenus du site (textes, images, logos, code) sont la propriété exclusive de C’tonjob/I‑Intérim, sauf mention contraire. Toute reproduction ou utilisation sans autorisation est interdite.
         </p>
 
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">5. Protection des données personnelles</h2>
         <p className="mb-4 text-sm sm:text-base">
-          Les données collectées sont traitées conformément à la <Link href="/privacy" className="text-purple-700 hover:underline">Politique de confidentialité (RGPD)</Link>. Les utilisateurs disposent d’un droit d’accès, de modification et de suppression de leurs données.
+          Les données collectées sont traitées conformément à la <Link href="/privacy" className="text-purple-700 hover:underline">Politique de confidentialité (RGPD)</Link>.
+          Les utilisateurs disposent d’un droit d’accès, de modification et de suppression de leurs données.
         </p>
 
         <h2 className="text-xl sm:text-2xl font-semibold mt-6 mb-3">6. Responsabilité</h2>
         <p className="mb-4 text-sm sm:text-base">
-          I-Intérim ne peut être tenu responsable des informations fournies par les recruteurs ou des contenus des offres publiées par des tiers.
+        I‑Intérim, propriétaire du site C’tonjob, ne peut être tenu responsable des informations fournies par les recruteurs ou des contenus des offres publiées par des tiers.
         </p>
 
         <p className="text-xs sm:text-sm mt-6 text-gray-600 text-center sm:text-left">
-          Dernière mise à jour : 24/11/2025
+          Dernière mise à jour : 25/11/2025
         </p>
 
         <div className="mt-6 text-center sm:text-left">

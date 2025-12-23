@@ -146,27 +146,34 @@ useEffect(() => {
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
-      router.push("/auth"); // redirige vers login si pas connecté
-      return;
+      router.push("/auth");
+      return; // pas de setLoadingUser(false)
     }
 
-    const { data: userData } = await supabase
-      .from("users")
-      .select("*")
+    const { data: userData, error } = await supabase
+      .from("profiles")
+      .select("role")
       .eq("id", session.user.id)
       .single();
 
-    if (!userData || userData.role !== "admin") {
-      router.push("/"); // redirige vers la page d'accueil si pas admin
-      return;
+    if (error || !userData) {
+      router.push("/auth");
+      return; // pas de setLoadingUser(false)
     }
 
-    setUser(userData);
+    if (userData.role !== "admin") {
+      router.push("/");
+      return; // pas de setLoadingUser(false)
+    }
+
+    setUser(userData); // seulement ici on met loadingUser à false
     setLoadingUser(false);
   };
 
   checkAuth();
 }, [router]);
+
+
 
 
 const navigate=useRouter();
@@ -177,10 +184,23 @@ const navigate=useRouter();
       field.toLowerCase().includes(search.toLowerCase())
     )
   );
+
 if (loadingUser) {
-  return <p className="text-center mt-20 text-gray-500">Chargement...</p>;
+  return (
+    <div className="w-screen h-screen flex items-center justify-center bg-gray-50">
+      <p className="text-gray-500">Chargement...</p>
+    </div>
+  );
 }
 
+// Si le formulaire est affiché
+if (showForm) {
+  return (
+    <div className="mt-6">
+      <JobForm job={editingJob} onSuccess={handleFormSuccess} />
+    </div>
+  );
+}
 if (showForm) {
   return (
     <div className="mt-6">
