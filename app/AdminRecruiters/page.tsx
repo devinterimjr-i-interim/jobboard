@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 interface Recruiter {
   id: string;
@@ -28,11 +29,14 @@ interface Recruiter {
 }
 
 const AdminRecruiters = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
   const [listRecruiters, setListRecruiters] = useState<Recruiter[]>([]);
   const [inputSearch, setInputSearch] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isVerified, setIsVerified] = useState(false); // ✅ ne rien afficher tant que non vérifié
 
   /* ================================
      🔹 DOCUMENT SIREN (VIEW)
@@ -161,34 +165,47 @@ const AdminRecruiters = () => {
     const checkAdmin = async () => {
       if (!user) return setLoading(false);
 
-      const { data } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
 
-      setIsAdmin(data?.role === "admin");
-      setLoading(false);
+        if (data?.role !== "admin") {
+          router.push("/"); // redirection immédiate
+          return;
+        }
+
+        setIsAdmin(true);
+        setIsVerified(true); // ✅ vérifié => on peut afficher
+      } catch (err) {
+        Sentry.captureException(err);
+        router.push("/");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    checkAdmin();
-  }, [user]);
+    if (!authLoading) checkAdmin();
+  }, [user, authLoading, router]);
 
   /* ================================
      🔹 FETCH
   ================================= */
   useEffect(() => {
+    if (!isVerified) return; // fetch uniquement si admin vérifié
     supabase.from("recruiters").select().then(({ data }) => {
       setListRecruiters(data || []);
     });
-  }, []);
+  }, [isVerified]);
 
   const filteredRecruiters = listRecruiters.filter(r =>
     r.company_name.toLowerCase().includes(inputSearch.toLowerCase())
   );
 
   if (loading) return <p className="text-center mt-10">Chargement...</p>;
-  if (!isAdmin) return <p className="text-center mt-10">Accès refusé</p>;
+  if (!isAdmin) return null; // ne rien afficher si pas admin
 
   /* ================================
      🔹 RENDER
@@ -202,8 +219,7 @@ const AdminRecruiters = () => {
           <div className="hidden md:block">
             <Table>
               <TableHeader>
-          <TableRow className="border-b border-gray-200">
-
+                <TableRow className="border-b border-gray-200">
                   <TableHead>Entreprise</TableHead>
                   <TableHead>Statut</TableHead>
                   <TableHead>Document</TableHead>

@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import * as Sentry from "@sentry/nextjs";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -45,6 +46,37 @@ const [selected, setSelected] = useState<Application | null>(null);
 const [showRejectDialog, setShowRejectDialog] = useState(false);
 const [rejectMessage, setRejectMessage] = useState("");
 const [rejectingId, setRejectingId] = useState<string | null>(null);
+const router = useRouter();
+
+const [user, setUser] = useState<any>(null);
+const [loadingUser, setLoadingUser] = useState(true);
+
+useEffect(() => {
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      router.push("/login"); // redirige si pas connecté
+      return;
+    }
+
+    const { data: userData } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", session.user.id)
+      .single();
+
+    if (!userData || userData.role !== "admin") {
+      router.push("/"); // redirige si pas admin
+      return;
+    }
+
+    setUser(userData);
+    setLoadingUser(false);
+  };
+
+  checkAuth();
+}, [router]);
 
 // Fetch des candidatures au montage
 useEffect(() => {
@@ -132,6 +164,9 @@ const confirmReject = async () => {
   }
 };
 
+if (loadingUser) {
+  return <p className="text-center mt-20 text-gray-500">Chargement...</p>;
+}
 
   if (loading) {
     return (

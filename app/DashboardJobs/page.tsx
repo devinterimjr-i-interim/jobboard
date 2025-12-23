@@ -63,6 +63,10 @@ export default function DashboardJobs() {
   const [videoApplications, setVideoApplications] = useState<VideoApplication[]>([]);
   const [loadingVideoApps, setLoadingVideoApps] = useState(false);
 
+  const [user, setUser] = useState<any>(null);
+const [loadingUser, setLoadingUser] = useState(true);
+
+
   useEffect(() => {
     fetchJobs();
     fetchVideoJobs();
@@ -137,6 +141,32 @@ const handleDeleteVideoJob = async (id: number, title: string) => {
     fetchVideoJobs();
   };
 
+useEffect(() => {
+  const checkAuth = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      router.push("/auth"); // redirige vers login si pas connecté
+      return;
+    }
+
+    const { data: userData } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", session.user.id)
+      .single();
+
+    if (!userData || userData.role !== "admin") {
+      router.push("/"); // redirige vers la page d'accueil si pas admin
+      return;
+    }
+
+    setUser(userData);
+    setLoadingUser(false);
+  };
+
+  checkAuth();
+}, [router]);
 
 
 const navigate=useRouter();
@@ -147,6 +177,9 @@ const navigate=useRouter();
       field.toLowerCase().includes(search.toLowerCase())
     )
   );
+if (loadingUser) {
+  return <p className="text-center mt-20 text-gray-500">Chargement...</p>;
+}
 
 if (showForm) {
   return (

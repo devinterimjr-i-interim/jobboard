@@ -40,79 +40,89 @@ export default function AdminVideoApplications() {
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState<VideoApplication[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [isVerified, setIsVerified] = useState(false); // ✅ pour ne rien afficher tant que non vérifié
 
-  /* 🔒 Vérification ADMIN */
+  /* 🔒 ADMIN ONLY */
   useEffect(() => {
     const checkAdmin = async () => {
       if (!user) return;
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
 
-      if (error || data?.role !== "admin") {
+        if (error || data?.role !== "admin") {
+          toast({
+            title: "Accès refusé",
+            description: "Cette page est réservée aux administrateurs",
+            variant: "destructive",
+          });
+          router.push("/"); // redirection immédiate
+          return;
+        }
+
+        setIsVerified(true); // utilisateur admin => on peut afficher la page
+      } catch (err) {
+        Sentry.captureException(err);
         router.push("/");
       }
     };
 
     if (!authLoading) {
-      if (!user) {
-        router.push("/auth");
-      } else {
-        checkAdmin();
-      }
+      if (!user) router.push("/auth");
+      else checkAdmin();
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, toast]);
 
   /* 🔎 Fetch candidatures vidéo */
-const fetchApplications = async () => {
-  try {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("applicationvideo")
-      .select(`
-        id,
-        full_name,
-        email,
-        status,
-        created_at,
-        cv_url,
-        message,
-        video_job:videojob_id (
-          title,
-          location,
-          contract_type
-        )
-      `)
-      .order("created_at", { ascending: false });
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("applicationvideo")
+        .select(`
+          id,
+          full_name,
+          email,
+          status,
+          created_at,
+          cv_url,
+          message,
+          video_job:videojob_id (
+            title,
+            location,
+            contract_type
+          )
+        `)
+        .order("created_at", { ascending: false });
 
-    if (error) throw error;
+      if (error) throw error;
 
-    // Transformer video_job de tableau à objet
-    const formattedData = (data || []).map((item: any) => ({
-      ...item,
-      video_job: item.video_job?.[0] || null
-    }));
+      const formattedData = (data || []).map((item: any) => ({
+        ...item,
+        video_job: item.video_job?.[0] || null,
+      }));
 
-    setApplications(formattedData);
-  } catch (error: any) {
-    console.error(error);
-    Sentry.captureException(error);
-    toast({
-      title: "Erreur",
-      description: "Impossible de récupérer les candidatures",
-      variant: "destructive",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+      setApplications(formattedData);
+    } catch (error: any) {
+      console.error(error);
+      Sentry.captureException(error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de récupérer les candidatures",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
+    if (isVerified) fetchApplications(); // fetch uniquement si admin vérifié
+  }, [isVerified]);
 
   /* 🔁 Changer le statut via API ADMIN */
   const handleStatusChange = async (
@@ -164,7 +174,8 @@ const fetchApplications = async () => {
 
   /* 📄 Ouvrir le CV */
   const openCv = async (path: string | null) => {
-    if (!path) return alert("Aucun CV disponible");
+    if (!path)
+      return toast({ title: "Aucun CV disponible", variant: "destructive" });
 
     try {
       const { data, error } = await supabase.storage
@@ -218,6 +229,9 @@ const fetchApplications = async () => {
     }
   };
 
+  // ✅ Ne rien afficher tant que non vérifié
+  if (!isVerified) return null;
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f3f4f6]">
       <main className="flex-1 container mx-auto px-4 py-12">
@@ -247,10 +261,18 @@ const fetchApplications = async () => {
                   {getBadge(app.status)}
                 </div>
 
-                <p><strong>Candidat :</strong> {app.full_name ?? "—"}</p>
-                <p><strong>Email :</strong> {app.email ?? "—"}</p>
-                <p><strong>Message :</strong> {app.message ?? "—"}</p>
-                <p><strong>Lieu :</strong> {app.video_job?.location ?? "—"}</p>
+                <p>
+                  <strong>Candidat :</strong> {app.full_name ?? "—"}
+                </p>
+                <p>
+                  <strong>Email :</strong> {app.email ?? "—"}
+                </p>
+                <p>
+                  <strong>Message :</strong> {app.message ?? "—"}
+                </p>
+                <p>
+                  <strong>Lieu :</strong> {app.video_job?.location ?? "—"}
+                </p>
 
                 {app.cv_url && (
                   <Button
@@ -267,18 +289,14 @@ const fetchApplications = async () => {
                 <div className="flex gap-2 mt-4">
                   <Button
                     disabled={submitting || app.status === "acceptee"}
-                    onClick={() =>
-                      handleStatusChange(app.id, "acceptee")
-                    }
+                    onClick={() => handleStatusChange(app.id, "acceptee")}
                     className="flex-1 bg-green-100 text-green-700"
                   >
                     Accepter
                   </Button>
                   <Button
                     disabled={submitting || app.status === "declinee"}
-                    onClick={() =>
-                      handleStatusChange(app.id, "declinee")
-                    }
+                    onClick={() => handleStatusChange(app.id, "declinee")}
                     className="flex-1 bg-red-100 text-red-700"
                   >
                     Refuser

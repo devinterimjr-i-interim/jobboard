@@ -10,7 +10,7 @@ export const Footer = () => {
           
           {/* Logo / Branding */}
           <div className="flex flex-col items-start">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Next'Job</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">PopupJob</h2>
             <p className="text-sm text-gray-600">Le jobboard qui simplifie vos recrutements et vos candidatures</p>
           </div>
 
@@ -33,7 +33,7 @@ export const Footer = () => {
 
         {/* Liens légaux */}
         <div className="mt-10 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4 md:gap-0">
-          <span>© 2025 Next'Job. Tous droits réservés.</span>
+          <span>© 2025 PopupJob. Tous droits réservés.</span>
           <div className="flex gap-4">
            <Link href="/privacy" className="hover:text-gray-900 underline">Politique de confidentialité</Link>
            <Link href="/cgu" className="hover:text-gray-900 underline">CGU</Link>

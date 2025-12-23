@@ -55,7 +55,7 @@ export const Header = () => {
           className="flex items-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity"
         >
           <Briefcase className="h-7 w-7 text-[#4d307cff]" />
-          <span className="hidden sm:inline text-[#4d307cff]">Next'Job</span>
+          <span className="hidden sm:inline text-[#4d307cff]">PopUpjob</span>
         </Link>
 
         {/* Desktop navigation */}

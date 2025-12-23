@@ -26,22 +26,35 @@ export default function VideoJobFormPage() {
     const checkAdmin = async () => {
       if (!user) return;
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
 
-      if (error || data?.role !== "admin") {
+        if (error || data?.role !== "admin") {
+          toast({
+            title: "Accès refusé",
+            description: "Cette page est réservée aux administrateurs",
+            variant: "destructive",
+          });
+          router.push("/"); // redirection si non admin
+        }
+      } catch (err) {
+        Sentry.captureException(err);
         router.push("/");
       }
     };
 
     if (!authLoading) {
-      if (!user) router.push("/auth");
-      else checkAdmin();
+      if (!user) {
+        router.push("/auth"); // non connecté
+      } else {
+        checkAdmin();
+      }
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, toast]);
 
   const sanitize = (v: string) => v.trim().replace(/[<>]/g, "");
 
