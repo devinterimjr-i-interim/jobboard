@@ -22,11 +22,11 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: {
-    default: "Next'Jobs – Trouvez un emploi facilement",
-    template: "%s | Next'Jobs",
+    default: "c’tonjob – Trouvez un emploi facilement",
+    template: "%s | c’tonjob",
   },
   description:
-    "Next'Jobs est un jobboard moderne et simple d'utilisation. Trouvez un emploi, un stage ou une alternance dans tous les secteurs : commerce, santé, industrie, services, restauration et plus encore.",
+    "c’tonjob est un jobboard moderne et simple d'utilisation. Trouvez un emploi, un stage ou une alternance dans tous les secteurs : commerce, santé, industrie, services, restauration et plus encore.",
   keywords: [
     "emploi",
     "job",
@@ -34,15 +34,17 @@ export const metadata: Metadata = {
     "recrutement",
     "offres d'emploi",
     "travail",
-    "stage",
-    "alternance",
-    "Next'Jobs",
+    "c’tonjob",
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
+      <head>
+        {/* Balise de vérification Google */}
+        <meta name="google-site-verification" content="fHiMydOo128Dngr05vaNZNdWWEci5WECXtPsINfrU_s" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased`}>
         {children}
       </body>
