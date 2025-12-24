@@ -74,7 +74,7 @@ const Index = () => {
       <main className="flex-1">
         {/* HERO */}
 <section className="
-  pt-6 sm:pt-16
+  pt-12 sm:pt-16
   flex flex-col justify-center items-center
   text-center
   min-h-[280px] sm:min-h-[400px] md:min-h-[480px] lg:min-h-[60vh]
