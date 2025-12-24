@@ -134,7 +134,9 @@ const fetchDashboardData = async (recruiterId: string) => {
       .eq("recruiter_id", recruiterId);
     if (jobsError) throw jobsError;
 
-    const jobIds = jobs?.map((j) => j.id) || [];
+   // Filtre les valeurs undefined ou null
+const jobIds = jobs?.map((j) => j.id).filter((id): id is string => !!id) || [];
+
 
     // Récupérer toutes les candidatures liées aux jobs du recruteur
     const { data: applications, error: appsError } = await supabase
@@ -177,38 +179,65 @@ const fetchDashboardData = async (recruiterId: string) => {
 
 
 
-  const handleViewApplications = async (jobId: string) => {
-    try {
-  const { data, error } = await supabase
-  .from("applications")
-  .select(`id, full_name, email, cv_url, created_at, message, jobs(title)`) // ← ajout de message
-  .eq("job_id", jobId)
-  .order("created_at", { ascending: false });
+const handleViewApplications = async (jobId: string) => {
+  if (!jobId) {
+    toast({
+      title: "Erreur",
+      description: "Job ID non défini",
+      variant: "destructive",
+    });
+    return;
+  }
 
-      if (error) throw error;
-      setSelectedJobApplications(data || []);
-      setShowApplicationsDialog(true);
-    } catch (error: any) {
-      Sentry.captureException(error);
-      toast({ title: "Erreur", description: "Impossible de charger les candidatures", variant: "destructive" });
-    }
-  };
-
-const openCv = async (filePath: string) => {
   try {
+    const { data, error } = await supabase
+      .from("applications")
+      .select(`id, full_name, email, cv_url, created_at, message, jobs(title)`)
+      .eq("job_id", jobId) // jobId est maintenant garanti
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    setSelectedJobApplications(data || []);
+    setShowApplicationsDialog(true);
+  } catch (error: any) {
+    Sentry.captureException(error);
+    toast({ title: "Erreur", description: "Impossible de charger les candidatures", variant: "destructive" });
+  }
+};
+
+
+const openCv = async (app: Application) => {
+  if (!app.id || !app.cv_url) return; // sécurité
+
+  try {
+    // Met à jour le statut
+    const { error: updateError } = await supabase
+      .from("applications")
+      .update({ status: "consultée" })
+      .eq("id", app.id);
+
+    if (updateError) throw updateError;
+
+    // Génère le lien signé
     const { data, error } = await supabase.storage
       .from("cv_uploads")
-      .createSignedUrl(filePath, 60); // 60 secondes de validité
+      .createSignedUrl(app.cv_url, 60);
 
     if (error || !data?.signedUrl) throw error || new Error("Impossible de générer le lien");
 
-    // ouvre le CV dans un nouvel onglet
     window.open(data.signedUrl, "_blank");
+
+    // Met à jour localement le statut
+    setSelectedJobApplications((prev) =>
+      prev.map((a) => (a.id === app.id ? { ...a, status: "consultée" } : a))
+    );
   } catch (error: any) {
     console.error(error);
     toast({ title: "Erreur", description: "Impossible d'ouvrir le CV", variant: "destructive" });
   }
 };
+
+
 
 
   const deleteJob = async (id: string) => {
@@ -252,16 +281,29 @@ const deleteProfilRecruiter = async () => {
   }
 };
 
-
-  const handleConfirmAction = async () => {
-    if (!confirmAction) return;
+const handleConfirmAction = async ({ type, id }: { type: "accept" | "decline"; id: string }) => {
+  try {
     await supabase
       .from("applications")
-      .update({ status: confirmAction.type === "accept" ? "acceptee" : "declinee" })
-      .eq("id", confirmAction.id);
-    if (confirmAction.type === "accept") toast({ title: "Candidature acceptée", description: "Le statut a été mis à jour." });
-    setConfirmAction(null);
-  };
+      .update({ status: type === "accept" ? "acceptee" : "declinee" })
+      .eq("id", id);
+
+    toast({
+      title: type === "accept" ? "Candidature acceptée" : "Candidature déclinée",
+      description: "Le statut a été mis à jour.",
+    });
+
+    // Mettre à jour localement le tableau pour refléter immédiatement le changement
+    setSelectedJobApplications((prev) =>
+      prev.map((app) =>
+        app.id === id ? { ...app, status: type === "accept" ? "acceptee" : "declinee" } : app
+      )
+    );
+  } catch (error: any) {
+    console.error(error);
+    toast({ title: "Erreur", description: "Impossible de mettre à jour le statut", variant: "destructive" });
+  }
+};
 
   if (authLoading || loading) {
     return (
@@ -542,27 +584,53 @@ const deleteProfilRecruiter = async () => {
               ) : (
                 <ul className="space-y-2">
       {selectedJobApplications.map((app) => (
-  <li
-    key={app.id}
-    className="p-4 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition flex flex-col gap-2"
-  >
-    <div>
-      <p className="font-medium text-gray-900">{app.full_name}</p>
-      <p className="text-sm text-gray-600">{app.email}</p>
-    </div>
+<li
+  key={app.id}
+  className="p-4 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition flex flex-col gap-3"
+>
+  {/* Infos du candidat */}
+  <div>
+    <p className="font-medium text-gray-900">{app.full_name}</p>
+    <p className="text-sm text-gray-600">{app.email}</p>
+  </div>
 
-    {app.message && (
-      <p className="text-gray-700 text-sm">{app.message}</p>
-    )}
+  {/* Message du candidat */}
+  {app.message && (
+    <p className="text-gray-700 text-sm">{app.message}</p>
+  )}
 
+  {/* Boutons : CV + Actions */}
+  <div className="flex gap-2 mt-2">
     <Button
       size="sm"
-      onClick={() => openCv(app.cv_url)}
-      className="ml-0 bg-indigo-600 text-white hover:bg-indigo-700 border-none"
+      onClick={() => openCv(app)}
+      className="flex-1 bg-indigo-600 text-white hover:bg-indigo-700 border-none"
     >
       Voir le CV
     </Button>
-  </li>
+
+    <Button
+      size="sm"
+      variant="default"
+      className="flex-1 bg-green-500 text-white hover:bg-green-600 border-none"
+      onClick={() => handleConfirmAction({ type: "accept", id: app.id })}
+      disabled={app.status === "acceptee" || app.status === "declinee"}
+    >
+      {app.status === "acceptee" ? "Acceptée" : "Accepter"}
+    </Button>
+
+    <Button
+      size="sm"
+      variant="default"
+      className="flex-1 bg-red-500 text-white hover:bg-red-600 border-none"
+      onClick={() => handleConfirmAction({ type: "decline", id: app.id })}
+      disabled={app.status === "acceptee" || app.status === "declinee"}
+    >
+      {app.status === "declinee" ? "Déclinée" : "Décliner"}
+    </Button>
+  </div>
+</li>
+
 ))}
 
                 </ul>
