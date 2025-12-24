@@ -275,7 +275,7 @@ const Index = () => {
       <section className="py-20 px-4 bg-gray-50">
   <div className="container mx-auto flex flex-col items-center text-center">
     <h2 className="text-3xl sm:text-4xl font-bold mb-12" style={{ color: "bg-indigo-600" }}>
-      Pourquoi choisir Next'Job ?
+      Pourquoi choisir C'tonjob ?
     </h2>
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">
       {[

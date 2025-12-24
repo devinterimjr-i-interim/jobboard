@@ -41,10 +41,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <head>
-        {/* Balise de vérification Google */}
-        <meta name="google-site-verification" content="fHiMydOo128Dngr05vaNZNdWWEci5WECXtPsINfrU_s" />
-      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased`}>
         {children}
       </body>
