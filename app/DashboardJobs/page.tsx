@@ -245,17 +245,18 @@ if (showForm) {
     </Button>
   </Link>
 
-  <Link href="/videoJobForm">
+{/* a rajouter prochaine mise a jour */}
+  {/* <Link href="/videoJobForm">
     <Button className="w-full sm:w-auto text-gray-800 px-4 py-2 sm:px-4 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition">
       Publier offre vidéo
     </Button>
-  </Link>
+  </Link> */}
 
-  <Link href="/video_application">
+  {/* <Link href="/video_application">
     <Button className="w-full sm:w-auto text-gray-800 px-4 py-2 sm:px-4 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition">
       Candidatures vidéo
     </Button>
-  </Link>
+  </Link> */}
 </div>
 
   </div>
