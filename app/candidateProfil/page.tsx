@@ -178,10 +178,11 @@ useEffect(() => {
           .order("created_at", { ascending: false });
 
       if (videoApplicationsError) throw videoApplicationsError;
-    const transformedVideoApplications = (videoApplicationsData || []).map((app: any) => ({
+const transformedVideoApplications = (videoApplicationsData || []).map((app: any) => ({
   ...app,
-  video_job: app.video_job?.[0] || { title: "", location: "", contract_type: "" },
+  video_job: app.video_job || { title: "", location: "", contract_type: "" },
 }));
+
 setVideoApplications(transformedVideoApplications);
 
 
