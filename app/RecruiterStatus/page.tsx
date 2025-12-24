@@ -127,6 +127,7 @@ export default function RecruiterStatus() {
   };
 const fetchDashboardData = async (recruiterId: string) => {
   try {
+    // Récupérer tous les jobs du recruteur
     const { data: jobs, error: jobsError } = await supabase
       .from("jobs")
       .select("id, title, created_at, is_valid")
@@ -134,35 +135,46 @@ const fetchDashboardData = async (recruiterId: string) => {
     if (jobsError) throw jobsError;
 
     const jobIds = jobs?.map((j) => j.id) || [];
+
+    // Récupérer toutes les candidatures liées aux jobs du recruteur
     const { data: applications, error: appsError } = await supabase
       .from("applications")
-      .select(`id, full_name, email, cv_url, created_at, job_id, jobs(title)`)
-      .in("job_id", jobIds)
+      .select(`id, full_name, email, cv_url, created_at, message, job_id, jobs(id, title)`)
+      .in("job_id", jobIds) // SEULEMENT les jobs de ce recruteur
       .order("created_at", { ascending: false });
     if (appsError) throw appsError;
 
+    // Construire la liste des jobs avec le nombre de candidatures
     const jobsWithApps: JobWithApplications[] = jobs?.map((job) => ({
       id: job.id,
       title: job.title,
       created_at: job.created_at,
       application_count: applications?.filter((app) => app.job_id === job.id).length || 0,
-      is_active: job.is_valid, // <-- ajouté pour correspondre au type JobWithApplications
+      is_active: job.is_valid,
     })) || [];
 
     setStats({ totalJobs: jobs?.length || 0, totalApplications: applications?.length || 0 });
 
-    const recentApps: Application[] = applications?.map(app => ({
-      ...app,
-      jobs: app.jobs ? [app.jobs[0]] : null, // garde le premier job dans un tableau
-    })) || [];
+    // Préparer les dernières candidatures pour affichage
+ const recentApps: Application[] = applications?.map(app => {
+  // Cherche le job correspondant dans la liste des jobs du recruteur
+  const job = jobs.find(j => j.id === app.job_id);
+  return {
+    ...app,
+    jobs: job ? [{ id: job.id, title: job.title }] : null,
+  };
+}) || [];
+
 
     setRecentApplications(recentApps.slice(0, 5));
     setAllJobs(jobsWithApps);
+
   } catch (error: any) {
     Sentry.captureException(error);
     toast({ title: "Erreur", description: "Impossible de récupérer les données du tableau de bord", variant: "destructive" });
   }
 };
+
 
 
   const handleViewApplications = async (jobId: string) => {
@@ -182,10 +194,22 @@ const fetchDashboardData = async (recruiterId: string) => {
     }
   };
 
-  const openCv = async (filePath: string) => {
-    const { data, error } = await supabase.storage.from("cv_uploads").createSignedUrl(filePath, 60);
-    console.log(data);
-  };
+const openCv = async (filePath: string) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from("cv_uploads")
+      .createSignedUrl(filePath, 60); // 60 secondes de validité
+
+    if (error || !data?.signedUrl) throw error || new Error("Impossible de générer le lien");
+
+    // ouvre le CV dans un nouvel onglet
+    window.open(data.signedUrl, "_blank");
+  } catch (error: any) {
+    console.error(error);
+    toast({ title: "Erreur", description: "Impossible d'ouvrir le CV", variant: "destructive" });
+  }
+};
+
 
   const deleteJob = async (id: string) => {
     try {
