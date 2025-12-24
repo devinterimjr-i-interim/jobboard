@@ -63,23 +63,38 @@ export const ApplicationForm = ({ jobId, jobTitle }: ApplicationFormProps) => {
   }, [user, jobId]);
 
   // Récupérer profil
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user) return;
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("full_name, email")
-          .eq("id", user.id)
-          .single();
-        if (error) throw error;
-        setFormData({ fullName: data.full_name, email: data.email, message: "" });
-      } catch (error) {
-        Sentry.captureException(error);
+useEffect(() => {
+  const fetchProfile = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", user.id)
+        .maybeSingle(); // ← remplace single() par maybeSingle()
+
+      if (error) throw error;
+
+      if (!data) {
+        console.warn("Profil introuvable pour l'utilisateur", user.id);
+        return;
       }
-    };
-    fetchProfile();
-  }, [user]);
+
+      setFormData({
+        fullName: data.full_name || "",
+        email: data.email || "",
+        message: "",
+      });
+    } catch (err) {
+      console.error("Erreur récupération profil:", err);
+      Sentry.captureException(err);
+    }
+  };
+
+  fetchProfile();
+}, [user]);
+
 
   // Récupérer job
   useEffect(() => {
