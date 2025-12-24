@@ -52,8 +52,15 @@ async function fetchProfile(){
     accepted_cgu:false,
   });
 
-  const sanitizeInput = (input: string) => input.trim().replace(/[<>]/g, "");
+ const sanitizeInput = (input?: string) =>
+  (input ?? "").trim().replace(/[<>]/g, "");
 
+useEffect(() => {
+  setFormData(prev => ({
+    ...prev,
+    contact_name: profile[0]?.full_name || ""
+  }));
+}, [profile]);
 
   // 🔒 Redirection si non connecté
   useEffect(() => {
@@ -103,22 +110,24 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     // 🔹 Validation et nettoyage des champs
-    const cleanedData = {
-      company_name: sanitizeInput(formData.company_name),
-      contact_name: sanitizeInput(profile[0]?.full_name),
-      phone: sanitizeInput(formData.phone),
-      sector: sanitizeInput(formData.sector),
-      website: sanitizeInput(formData.website), // optionnel
-      description: sanitizeInput(formData.description),
-      size: sanitizeInput(formData.size),
-      location: sanitizeInput(formData.location),
-      siret: formData.siret.replace(/\s+/g, ""),
-    };
+ const cleanedData = {
+  company_name: sanitizeInput(formData.company_name),
+
+  // 🔒 Nom du contact = utilisateur connecté
+  contact_name: sanitizeInput(formData.contact_name),
+
+  phone: sanitizeInput(formData.phone),
+  sector: sanitizeInput(formData.sector),
+  website: sanitizeInput(formData.website),
+  description: sanitizeInput(formData.description),
+  size: sanitizeInput(formData.size),
+  location: sanitizeInput(formData.location),
+  siret: formData.siret.replace(/\s+/g, ""),
+};
 
     // 🔹 Validation des champs obligatoires
     const requiredFields = [
       { key: "company_name", label: "Nom de l'entreprise" },
-      { key: "contact_name", label: "Nom du contact" },
       { key: "phone", label: "Téléphone" },
       { key: "sector", label: "Secteur" },
       { key: "description", label: "Description" },

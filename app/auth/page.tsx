@@ -234,7 +234,7 @@ const handleSignUp = async (e: React.FormEvent) => {
     <Card className="shadow-xl border border-gray-200 rounded-2xl bg-white">
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-center text-gray-900">
-          Bienvenue sur Next'Job
+          Bienvenue sur C'tonJob
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
