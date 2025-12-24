@@ -171,7 +171,7 @@ const JobDetail = () => {
                 <div className="flex items-center gap-1"><MapPin className="h-5 w-5" /> {job.location}</div>
                 <div className="flex items-center gap-1"><Briefcase className="h-5 w-5" /> {job.type}</div>
                 {job.salary_range && (
-                  <div className="flex items-center gap-1">{job.salary_range}<Euro className="h-5 w-5" /> </div>
+                  <div className="flex items-center gap-1">{job.salary_range}K<Euro className="h-5 w-5" /> </div>
                 )}
               </div>
             </CardHeader>
@@ -206,7 +206,7 @@ const JobDetail = () => {
                 </Button>
                 {job.recruiters?.id && (
                   <Link href={`/DetailCompany/${job.recruiters.id}`} className="w-full sm:w-auto">
-                    <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto border-gray-300">
                       Voir profil recruteur
                     </Button>
                   </Link>

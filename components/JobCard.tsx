@@ -67,7 +67,7 @@ export const JobCard = ({ job }: { job: Job }) => {
           {job.salary_range && (
             <div className="flex items-center gap-2 text-muted-foreground">
               <Euro className="h-4 w-4" style={{ color: violet }} />
-              <span>{job.salary_range}</span>
+              <span>{job.salary_range}k</span>
             </div>
           )}
         </div>

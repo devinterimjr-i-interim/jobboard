@@ -206,7 +206,7 @@ export default function PostJob() {
                   id="title"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Développeur Fullstack React/Node"
+                  placeholder="Infirmier"
                   className="border border-gray-200"
                   maxLength={35}
                 />
@@ -220,7 +220,7 @@ export default function PostJob() {
                   id="sector"
                   value={formData.sector}
                   onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
-                  placeholder="Technologies de l'information"
+                  placeholder="Ingénierie informatique"
                   className="border border-gray-200"
                 />
                 {errors.sector && <p className="text-red-600 text-sm mt-1">{errors.sector}</p>}
@@ -261,13 +261,20 @@ export default function PostJob() {
               {/* Fourchette salariale */}
               <div>
                 <label htmlFor="salary_range" className="block text-sm font-medium mb-2">Fourchette salariale *</label>
-                <Input
-                  id="salary_range"
-                  value={formData.salary_range}
-                  onChange={(e) => setFormData({ ...formData, salary_range: e.target.value })}
-                  placeholder="40k-50k€"
-                  className="border border-gray-200"
-                />
+<Input
+  id="salary_range"
+  type="text"
+  inputMode="numeric"
+  maxLength={3}
+  value={formData.salary_range}
+  onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 3);
+    setFormData({ ...formData, salary_range: value });
+  }}
+  placeholder="400"
+  className="border border-gray-200"
+/>
+
                 {errors.salary_range && <p className="text-red-600 text-sm mt-1">{errors.salary_range}</p>}
               </div>
 
