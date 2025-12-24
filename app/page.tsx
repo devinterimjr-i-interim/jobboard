@@ -89,24 +89,25 @@ const Index = () => {
   ">
 
     {/* TITRES */}
-    <div className="flex flex-col items-center text-center mb-4 sm:mb-6">
-      <h1 className="
-        text-[28px] sm:text-5xl md:text-6xl lg:text-[65px] 
-        font-roboto font-bold
-        leading-[34px] sm:leading-tight
-      ">
-        Trouvez votre prochain emploi
-      </h1>
+<div className="flex flex-col items-center text-center mb-4 sm:mb-6 px-6 sm:px-0 max-w-[95%] mx-auto">
+  <h1 className="
+    text-[28px] sm:text-5xl md:text-6xl lg:text-[65px] 
+    font-roboto font-bold
+    leading-[34px] sm:leading-tight
+  ">
+    Trouvez votre prochain emploi
+  </h1>
 
-      <h1 className="
-        text-[28px] sm:text-5xl md:text-6xl lg:text-[65px] 
-        font-roboto font-bold 
-        text-[#4d307cff] mt-2
-        leading-[34px] sm:leading-tight
-      ">
-        rapidement et facilement
-      </h1>
-    </div>
+  <h1 className="
+    text-[28px] sm:text-5xl md:text-6xl lg:text-[65px] 
+    font-roboto font-bold 
+    text-[#4d307cff] mt-2
+    leading-[34px] sm:leading-tight
+  ">
+    rapidement et facilement
+  </h1>
+</div>
+
 
     {/* PARAGRAPHE */}
     <p className="
