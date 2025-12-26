@@ -168,9 +168,10 @@ const Index = () => {
 
         <div className="w-full flex justify-center items-center mb-4 h-[40px]">
           <div className="rounded-[50%] w-[13px] h-[13px] bg-[#70549c] m-[5px]"></div>
-          <p className="font-medium text-gray-400">
-            Sélection de nos offres phares
-          </p>
+    <p className="font-medium text-gray-400">
+  Trouvez facilement le job fait pour vous
+</p>
+
         </div>
 
         {/* CARROUSEL VIDEO RESPONSIVE */}
