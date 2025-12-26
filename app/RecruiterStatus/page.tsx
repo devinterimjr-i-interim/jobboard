@@ -47,15 +47,15 @@ interface RecruiterStats {
   totalJobs: number;
   totalApplications: number;
 }
-
 interface Application {
   id: string;
   full_name: string;
   email: string;
   cv_url: string;
   created_at: string;
-  jobs?: { title: string }[] | null; // <-- tableau
+  jobs?: { title: string }[] | null;
   message?: string | null;
+  status?: "en_attente" | "consultée" | "acceptee" | "declinee";
 }
 
 
