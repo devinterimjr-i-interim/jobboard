@@ -264,7 +264,6 @@ async function openCv(cvPath: string) {
     }
 
     if (data?.signedUrl) {
-      console.log("Signed URL:", data.signedUrl);
       window.open(data.signedUrl, "_blank");
     } else {
       alert("Impossible de récupérer l'URL du CV");

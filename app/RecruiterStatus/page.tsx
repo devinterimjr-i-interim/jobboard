@@ -594,10 +594,12 @@ const handleConfirmAction = async ({ type, id }: { type: "accept" | "decline"; i
     <p className="text-sm text-gray-600">{app.email}</p>
   </div>
 
-  {/* Message du candidat */}
-  {app.message && (
-    <p className="text-gray-700 text-sm">{app.message}</p>
-  )}
+<div className="text-gray-700 text-sm whitespace-pre-line">
+  {app.message || "Aucun message"}
+</div>
+
+
+
 
   {/* Boutons : CV + Actions */}
   <div className="flex gap-2 mt-2">

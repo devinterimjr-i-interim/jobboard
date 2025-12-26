@@ -5,10 +5,11 @@ import { rateLimit } from "@/lib/simpleRateLimit";
 // 🔹 Fonction pour nettoyer le message
 const sanitizeMessage = (input: string) => {
   return input
-    .trim()                     // supprime espaces en début/fin
-    .replace(/<[^>]*>/g, "")    // supprime les balises HTML
-    .replace(/[\u0000-\u001F\u007F]/g, ""); // supprime caractères de contrôle
+    .trim()                     // supprime espaces début/fin
+    .replace(/<[^>]*>/g, "")    // supprime balises HTML
+    .replace(/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/g, ""); // supprime caractères de contrôle sauf retours à la ligne
 };
+
 
 export async function POST(req: Request) {
   try {

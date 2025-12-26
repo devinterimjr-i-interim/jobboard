@@ -36,7 +36,8 @@ export const ApplicationForm = ({ jobId, jobTitle }: ApplicationFormProps) => {
 
   const MAX_MESSAGE_LENGTH = 1000; // Limite message
 
-  const sanitizeInput = (input: string) => input.trim().replace(/[<>]/g, "");
+ const sanitizeInput = (input: string) => input.replace(/[<>]/g, "");
+
 
   // Vérifier candidature existante
   useEffect(() => {
