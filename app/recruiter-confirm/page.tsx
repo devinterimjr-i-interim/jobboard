@@ -18,34 +18,26 @@ export default function RecruiterConfirmPage() {
       return;
     }
 
-    const confirmRecruiter = async () => {
-      try {
-        const { error } = await supabase
-          .from("recruiters")
-          .update({ is_confirmed: true, status: "approved", confirmation_token: null })
-          .eq("confirmation_token", token);
+    const confirm = async () => {
+      const { error } = await supabase
+        .from("recruiters")
+        .update({ is_confirmed: true, status: "approved", confirmation_token: null })
+        .eq("confirmation_token", token);
 
-        setStatus(error ? "error" : "success");
-      } catch (err) {
-        console.error("Erreur lors de la confirmation:", err);
-        setStatus("error");
-      }
+      setStatus(error ? "error" : "success");
     };
 
-    confirmRecruiter();
+    confirm();
   }, [token]);
 
-  const handleHome = () => router.push("/");
+  const handleHome = () => {
+    router.push("/");
+  };
 
   const getMessage = () => {
-    switch (status) {
-      case "loading":
-        return "Confirmation en cours...";
-      case "error":
-        return "❌ Lien invalide ou expiré";
-      case "success":
-        return "✅ Compte recruteur confirmé avec succès";
-    }
+    if (status === "loading") return "Confirmation en cours...";
+    if (status === "error") return "❌ Lien invalide ou expiré";
+    return "✅ Compte recruteur confirmé avec succès";
   };
 
   return (
