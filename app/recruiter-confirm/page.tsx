@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 
+// Force le rendu côté client pour éviter le prerender
+export const dynamic = "force-dynamic";
+
 export default function RecruiterConfirmPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
