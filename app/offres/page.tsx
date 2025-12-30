@@ -49,6 +49,13 @@ useEffect(() => {
   checkUser();
 }, []);
 
+const slugify = (text: string) => 
+  text.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-");
 
   // Fetch jobs
   useEffect(() => {
@@ -68,6 +75,7 @@ useEffect(() => {
     fetchJobs();
   }, []);
 
+  
   // Recommendations
   useEffect(() => {
     const jobRecommandation = async () => {
@@ -156,8 +164,7 @@ useEffect(() => {
                   <Button
                     size="icon"
                     onClick={scrollPrev}
-                    className="rounded-full shadow bg-white/90 w-9 h-9 sm:w-10 sm:h-10 border-none"
-                  >
+                    className="rounded-full shadow bg-white/90 w-9 h-9 sm:w-10 sm:h-10 border-none">
                     <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                   </Button>
                   <Button

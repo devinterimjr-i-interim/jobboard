@@ -30,16 +30,16 @@ export async function POST(req: Request) {
     const { path } = await req.json();
     if (!path) return NextResponse.json({ error: "Aucun chemin fourni" }, { status: 400 });
 
-    // Suppression du fichier dans le storage
+    // Suppression du fichier dans le storage (ex: logos)
     const { error: storageError } = await supabaseAdmin.storage
-      .from("company_verifications")
+      .from("logos") // <-- nouveau bucket si tu veux supprimer uniquement les logos
       .remove([path]);
 
     if (storageError) return NextResponse.json({ error: storageError.message }, { status: 500 });
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
-    console.error("Erreur suppression SIREN:", err);
+    console.error("Erreur suppression fichier:", err);
     return NextResponse.json({ error: err.message || "Erreur serveur" }, { status: 500 });
   }
 }

@@ -75,6 +75,7 @@ const JobDetail = () => {
     setShowApplicationForm(true);
   };
 
+  
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col">

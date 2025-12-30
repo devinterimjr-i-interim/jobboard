@@ -8,44 +8,50 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // 1️⃣ Récupérer le recruteur
-    const { data: recruiter } = await supabaseAdmin
+    console.log("Suppression du recruteur pour userId :", userId);
+
+    // Récupérer le recruteur
+    const { data: recruiter, error: recruiterError } = await supabaseAdmin
       .from("recruiters")
-      .select("id, logo_url, docsiren_path")
+      .select("id, logo_url")
       .eq("user_id", userId)
       .maybeSingle();
 
+    if (recruiterError) {
+      console.error("Erreur récupération recruteur :", recruiterError);
+      return NextResponse.json({ error: recruiterError.message }, { status: 500 });
+    }
+
     if (!recruiter) {
-      // Rien à supprimer
+      console.log("Aucun recruteur trouvé, rien à supprimer");
       return NextResponse.json({ success: true });
     }
 
     const recruiterId = recruiter.id;
 
-    // 2️⃣ Supprimer dépendances
+    // Supprimer les applications du recruteur
     await supabaseAdmin.from("applications").delete().eq("recruiter_id", recruiterId);
+
+    // Supprimer les jobs du recruteur
     await supabaseAdmin.from("jobs").delete().eq("recruiter_id", recruiterId);
 
-    // 3️⃣ Supprimer le recruteur
+    // Supprimer le recruteur
     await supabaseAdmin.from("recruiters").delete().eq("id", recruiterId);
 
-    // 4️⃣ Supprimer logo
+    // Supprimer le logo si présent
     if (recruiter.logo_url) {
       const path = recruiter.logo_url.split("/logos/")[1];
       if (path) {
-        await supabaseAdmin.storage.from("logos").remove([path]).catch(() => {});
+        await supabaseAdmin.storage.from("logos").remove([path]).catch((err) => {
+          console.warn("Erreur suppression logo :", err);
+        });
       }
     }
 
-    // 5️⃣ Supprimer SIREN
-    if (recruiter.docsiren_path) {
-      await supabaseAdmin.storage.from("company_verifications").remove([recruiter.docsiren_path]).catch(() => {});
-    }
-
+    console.log("Compte recruteur supprimé avec succès");
     return NextResponse.json({ success: true });
-
-  } catch (error) {
-    console.error("Erreur suppression recruteur:", error);
-    return NextResponse.json({ error: "Database error deleting recruiter" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Erreur suppression recruteur :", error);
+    return NextResponse.json({ error: error.message || "Erreur serveur" }, { status: 500 });
   }
 }

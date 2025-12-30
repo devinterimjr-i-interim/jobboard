@@ -72,8 +72,7 @@ const DetailCompany = () => {
         <div className="w-full max-w-[900px] flex items-center mb-4">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm sm:text-[15px] px-3 py-2 rounded-md text-gray-600 font-medium hover:bg-gray-100 transition"
-          >
+            className="flex items-center gap-2 text-sm sm:text-[15px] px-3 py-2 rounded-md text-gray-600 font-medium hover:bg-gray-100 transition">
             <ArrowLeft className="w-4 h-4" />
             Retour aux offres
           </button>
@@ -133,7 +132,7 @@ const DetailCompany = () => {
         </div>
 
         {/* Section "À propos" */}
-        <div className="w-full max-w-[900px] rounded-xl bg-white mt-6 p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="w-full max-w-[900px] rounded-xl bg-white mt-6 mb-6 p-6 shadow-sm hover:shadow-md transition-shadow">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-gray-900">
             À propos de l'entreprise
           </h2>
