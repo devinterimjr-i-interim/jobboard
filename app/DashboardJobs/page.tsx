@@ -107,31 +107,31 @@ const [loadingUser, setLoadingUser] = useState(true);
     fetchJobs();
   };
 
-const handleDeleteVideoJob = async (id: number, title: string) => {
-  const response = await fetch("/api/delete-video", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ path: title }),
-  });
+// const handleDeleteVideoJob = async (id: number, title: string) => {
+//   const response = await fetch("/api/delete-video", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ path: title }),
+//   });
 
-  await response.json();
+//   await response.json();
 
-  await supabase.from('video_job').delete().eq('id', id);
+//   await supabase.from('video_job').delete().eq('id', id);
 
-  setVideoJobs((prev) => prev.filter((job) => job.id !== id));
-};
+//   setVideoJobs((prev) => prev.filter((job) => job.id !== id));
+// };
 
 
   
   
-  const handleDeleteVideoApplication = async (id: string) => {
-    if (!confirm("Supprimer cette candidature ?")) return;
-    await supabase.from("applicationvideo").delete().eq("id", id);
-    toast({ title: "Candidature supprimée" });
-    fetchVideoApps();
-  };
+//   const handleDeleteVideoApplication = async (id: string) => {
+//     if (!confirm("Supprimer cette candidature ?")) return;
+//     await supabase.from("applicationvideo").delete().eq("id", id);
+//     toast({ title: "Candidature supprimée" });
+//     fetchVideoApps();
+//   };
 
   const handleFormSuccess = () => {
     setShowForm(false);
@@ -239,11 +239,11 @@ if (showForm) {
     </Button>
   </Link>
 
-  <Link href="/AdminRecruiters">
+  {/* <Link href="/AdminRecruiters">
     <Button className="w-full sm:w-auto text-gray-800 px-4 py-2 sm:px-4 sm:py-2 rounded-lg font-semibold hover:bg-gray-200 transition">
       Comptes à valider
     </Button>
-  </Link>
+  </Link> */}
 
 {/* a rajouter prochaine mise a jour */}
   {/* <Link href="/videoJobForm">
@@ -275,7 +275,7 @@ if (showForm) {
   </div>
 
   {/* Video Jobs */}
-  <div className="mt-6 sm:mt-10">
+  {/* <div className="mt-6 sm:mt-10">
     <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-700">Offres Vidéo</h3>
     {videoJobs.length === 0 ? (
       <p className="text-gray-500 text-center">Aucune offre vidéo</p>
@@ -320,7 +320,7 @@ if (showForm) {
         ))}
       </div>
     )}
-  </div>
+  </div> */}
 
   {/* Jobs classiques */}
   {loading ? (
