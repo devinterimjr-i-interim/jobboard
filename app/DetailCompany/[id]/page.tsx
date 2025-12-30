@@ -115,7 +115,7 @@ const DetailCompany = () => {
               </div>
             </div>
 
-            {company.website && (
+            {/* {company.website && (
               <a
                 href={company.website.startsWith("http") ? company.website : `https://${company.website}`}
                 target="_blank"
@@ -127,7 +127,7 @@ const DetailCompany = () => {
                   Visitez le site web
                 </button>
               </a>
-            )}
+            )} */}
           </div>
         </div>
 

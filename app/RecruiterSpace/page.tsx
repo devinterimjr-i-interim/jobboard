@@ -143,7 +143,6 @@ const handleSubmit = async (e: React.FormEvent) => {
       contact_name: sanitizeInput(formData.contact_name),
       phone: sanitizeInput(formData.phone),
       sector: sanitizeInput(formData.sector),
-      website: sanitizeInput(formData.website),
       description: sanitizeInput(formData.description),
       size: sanitizeInput(formData.size),
       location: sanitizeInput(formData.location),
