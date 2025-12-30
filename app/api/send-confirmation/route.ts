@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email ou token manquant" }, { status: 400 });
     }
 
-    ❌ Vérification email pro
+    // ❌ Vérification email pro
     if (!isProfessionalEmail(email)) {
       return NextResponse.json({ error: "Veuillez utiliser un email professionnel valide" }, { status: 400 });
     }
